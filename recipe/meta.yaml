@@ -20,8 +20,6 @@ outputs:
       run_exports:
         # The ABI is very stable
         - {{ pin_subpackage('libxcrypt', max_pin=None) }}
-      script_env:
-        - OBSOLETE_API=no
 
     requirements:
       build:
@@ -49,8 +47,6 @@ outputs:
     script: do_build.sh
     build:
       skip: true  # [not linux]
-      script_env:
-        - OBSOLETE_API=glibc
 
     requirements:
       build:
