@@ -14,6 +14,7 @@ build:
 
 outputs:
   - name: libxcrypt
+    script: build.sh
     build:
       skip: true  # [win]
       run_exports:
@@ -21,7 +22,6 @@ outputs:
         - {{ pin_subpackage('libxcrypt', max_pin=None) }}
       script_env:
         - OBSOLETE_API=no
-      script: $RECIPE_DIR/do_build.sh
 
     requirements:
       build:
@@ -44,7 +44,7 @@ outputs:
 
   # the difference is OBSOLETE_API
   - name: libxcrypt1
-    script: do_build.sh
+    script: build.sh
     build:
       skip: true  # [not linux]
       script_env:
