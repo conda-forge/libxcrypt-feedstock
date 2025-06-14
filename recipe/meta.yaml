@@ -32,6 +32,7 @@ outputs:
         # We get perl from yum to avoid creating a dependency cycle
         # - perl
       host:
+      run:
 
     test:
       commands:
@@ -59,6 +60,7 @@ outputs:
         - pkg-config
         - perl
       host:
+      run:
 
     test:
       commands:
