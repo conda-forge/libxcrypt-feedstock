@@ -30,6 +30,7 @@ outputs:
         # We get perl from yum to avoid creating a dependency cycle
         # - perl
       host:
+        - {{ stdlib("c") }}
       run:
 
     test:
@@ -56,6 +57,7 @@ outputs:
         - pkg-config
         - perl
       host:
+        - {{ stdlib("c") }}
       run:
 
     test:
