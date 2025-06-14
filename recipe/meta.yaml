@@ -14,6 +14,7 @@ build:
 
 outputs:
   - name: libxcrypt
+    script: do_build.sh
     build:
       skip: true  # [win]
       run_exports:
@@ -21,7 +22,6 @@ outputs:
         - {{ pin_subpackage('libxcrypt', max_pin=None) }}
       script_env:
         - OBSOLETE_API=no
-      script: $RECIPE_DIR/do_build.sh
 
     requirements:
       build:
