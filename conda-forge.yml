@@ -13,7 +13,7 @@ github:
 remote_ci_setup:
   - conda-forge-ci-setup=4
   # some regression TBD
-  - conda-libmamba-solver<24.5
-  - conda-build<24.5
-  - conda<24.5
+  - conda-libmamba-solver<24.0
+  - conda-build<24.0
+  - conda<24.0
 test: native_and_emulated
