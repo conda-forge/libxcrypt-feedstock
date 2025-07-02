@@ -26,7 +26,8 @@ chmod +x "${micromamba_exe}"
 echo "Creating environment"
 "${micromamba_exe}" create --yes --root-prefix "${MAMBA_ROOT_PREFIX}" --prefix "${MINIFORGE_HOME}" \
   --channel conda-forge \
-  pip python=3.10 conda-build conda-forge-ci-setup=4 "conda-libmamba-solver=23.12" "conda=23.11" "conda-build=3.27"
+  pip python=3.10 conda-build conda-forge-ci-setup=4 "conda-libmamba-solver=23.12" "conda=23.11" "conda-build=3.27" \
+  conda-index=0.3 conda-pack=0.7.1 conda-package-handling=2.2.0 conda-package-streaming=0.9.0
 echo "Moving pkgs cache from ${MAMBA_ROOT_PREFIX} to ${MINIFORGE_HOME}"
 mv "${MAMBA_ROOT_PREFIX}/pkgs" "${MINIFORGE_HOME}"
 echo "Cleaning up micromamba"

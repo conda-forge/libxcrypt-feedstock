@@ -35,7 +35,8 @@ mv /opt/conda/conda-meta/history /opt/conda/conda-meta/history.$(date +%Y-%m-%d-
 echo > /opt/conda/conda-meta/history
 micromamba install --root-prefix ~/.conda --prefix /opt/conda \
     --yes --override-channels --channel conda-forge --strict-channel-priority \
-    pip  python=3.10 conda-build conda-forge-ci-setup=4 "conda-libmamba-solver=23.12" "conda=23.11" "conda-build=3.27"
+    pip  python=3.10 conda-build conda-forge-ci-setup=4 "conda-libmamba-solver=23.12" "conda=23.11" "conda-build=3.27" \
+    conda-index=0.3 conda-pack=0.7.1 conda-package-handling=2.2.0 conda-package-streaming=0.9.0
 export CONDA_LIBMAMBA_SOLVER_NO_CHANNELS_FROM_INSTALLED=1
 
 # set up the condarc
