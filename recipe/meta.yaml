@@ -1,5 +1,5 @@
 {% set name = "libxcrypt" %}
-{% set version = "4.4.36" %}
+{% set version = "4.4.37" %}
 
 package:
   name: {{ name|lower }}
@@ -7,10 +7,10 @@ package:
 
 source:
   url: https://github.com/besser82/libxcrypt/releases/download/v{{ version }}/libxcrypt-{{ version }}.tar.xz
-  sha256: e5e1f4caee0a01de2aee26e3138807d6d3ca2b8e67287966d1fefd65e1fd8943
+  sha256: 902aa2976f959b5ebe55679b1722b8479f8f13cd4ce2ef432b0a84ae298fffd0
 
 build:
-  number: 1
+  number: 0
   skip: true  # [win]
   run_exports:
     # The ABI is very stable
@@ -22,6 +22,7 @@ build:
 requirements:
   build:
     - {{ compiler('c') }}
+    - {{ stdlib("c") }}
     - make
     - pkg-config
     # We get perl from yum to avoid creating a dependency cycle
@@ -48,6 +49,7 @@ outputs:
     requirements:
       build:
         - {{ compiler('c') }}
+        - {{ stdlib("c") }}
         - make
         - pkg-config
         - perl
