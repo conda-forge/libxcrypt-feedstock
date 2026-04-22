@@ -7,9 +7,10 @@ if [[ "${PERL:-}" = "$PREFIX"* ]]; then
     export PERL=$BUILD_PREFIX/bin/perl
 fi
 
-if [[ "${OBSOLETE_API}" == "" ]]; then
-    echo "Value for --enable-obsolete-api not given via OBSOLETE_API environment variable"
-    exit 1
+if [[ "${PKG_NAME}" == "libxcrypt" ]]; then
+    export OBSOLETE_API="no"
+else
+    export OBSOLETE_API="glibc"
 fi
 
 ./configure \

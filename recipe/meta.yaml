@@ -1,56 +1,34 @@
-{% set name = "libxcrypt" %}
-{% set version = "4.4.36" %}
+{% set version = "4.4.38" %}
 
 package:
-  name: {{ name|lower }}
+  name: libxcrypt-split
   version: {{ version }}
 
 source:
   url: https://github.com/besser82/libxcrypt/releases/download/v{{ version }}/libxcrypt-{{ version }}.tar.xz
-  sha256: e5e1f4caee0a01de2aee26e3138807d6d3ca2b8e67287966d1fefd65e1fd8943
+  sha256: 80304b9c306ea799327f01d9a7549bdb28317789182631f1b54f4511b4206dd6
 
 build:
-  number: 1
+  number: 0
   skip: true  # [win]
-  run_exports:
-    # The ABI is very stable
-    - {{ pin_subpackage('libxcrypt', max_pin=None) }}
-  script_env:
-    - OBSOLETE_API=no
-  script: $RECIPE_DIR/do_build.sh
-
-requirements:
-  build:
-    - {{ compiler('c') }}
-    - make
-    - pkg-config
-    # We get perl from yum to avoid creating a dependency cycle
-    # - perl
-
-test:
-  commands:
-    - test -f "${PREFIX}/include/crypt.h"
-    - test -f "${PREFIX}/lib/libcrypt${SHLIB_EXT}"
-    - test -f "${PREFIX}/lib/libcrypt.so.2"  # [not osx]
-    - test -f "${PREFIX}/lib/libcrypt.2.dylib"  # [osx]
-    - test -f "${PREFIX}/lib/pkgconfig/libxcrypt.pc"
-    - test ! -f "${PREFIX}/lib/libcrypt.so.1"
-    - test ! -f "${PREFIX}/lib/libcrypt.1.dylib"
 
 outputs:
+  # the difference is OBSOLETE_API
   - name: libxcrypt1
     script: do_build.sh
     build:
       skip: true  # [not linux]
-      script_env:
-        - OBSOLETE_API=glibc
 
     requirements:
       build:
         - {{ compiler('c') }}
+        - {{ stdlib("c") }}
         - make
         - pkg-config
         - perl
+      host:
+        - {{ stdlib("c") }}
+      run:
 
     test:
       commands:
@@ -58,8 +36,35 @@ outputs:
         - test ! -f "${PREFIX}/lib/libcrypt${SHLIB_EXT}"
         - test ! -f "${PREFIX}/lib/pkgconfig/libxcrypt.pc"
         - test -f "${PREFIX}/lib/libcrypt.so.1"
-
   - name: libxcrypt
+    script: do_build.sh
+    build:
+      skip: true  # [win]
+      run_exports:
+        # The ABI is very stable
+        - {{ pin_subpackage('libxcrypt', max_pin=None) }}
+
+    requirements:
+      build:
+        - {{ compiler('c') }}
+        - {{ stdlib("c") }}
+        - make
+        - pkg-config
+        # We get perl from yum to avoid creating a dependency cycle
+        # - perl
+      host:
+        - {{ stdlib("c") }}
+      run:
+
+    test:
+      commands:
+        - test -f "${PREFIX}/include/crypt.h"
+        - test -f "${PREFIX}/lib/libcrypt${SHLIB_EXT}"
+        - test -f "${PREFIX}/lib/libcrypt.so.2"  # [not osx]
+        - test -f "${PREFIX}/lib/libcrypt.2.dylib"  # [osx]
+        - test -f "${PREFIX}/lib/pkgconfig/libxcrypt.pc"
+        - test ! -f "${PREFIX}/lib/libcrypt.so.1"
+        - test ! -f "${PREFIX}/lib/libcrypt.1.dylib"
 
 about:
   home: https://github.com/besser82/libxcrypt
@@ -73,3 +78,4 @@ extra:
   recipe-maintainers:
     - chrisburr
     - mbargull
+  feedstock-name: libxcrypt
