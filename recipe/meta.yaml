@@ -76,4 +76,5 @@ extra:
   recipe-maintainers:
     - chrisburr
     - mbargull
+    - h-vetinari
   feedstock-name: libxcrypt
