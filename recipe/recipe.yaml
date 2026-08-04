@@ -1,5 +1,5 @@
 context:
-  version: "4.4.36"
+  version: "4.4.38"
 
 recipe:
   name: libxcrypt-split
@@ -7,10 +7,10 @@ recipe:
 
 source:
   url: https://github.com/besser82/libxcrypt/releases/download/v${{ version }}/libxcrypt-${{ version }}.tar.xz
-  sha256: e5e1f4caee0a01de2aee26e3138807d6d3ca2b8e67287966d1fefd65e1fd8943
+  sha256: 80304b9c306ea799327f01d9a7549bdb28317789182631f1b54f4511b4206dd6
 
 build:
-  number: 2
+  number: 0
   skip: win
 
 outputs:
