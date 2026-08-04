@@ -1,71 +1,87 @@
-{% set version = "4.4.36" %}
+context:
+  version: "4.4.36"
 
-package:
+recipe:
   name: libxcrypt-split
-  version: {{ version }}
+  version: ${{ version }}
 
 source:
-  url: https://github.com/besser82/libxcrypt/releases/download/v{{ version }}/libxcrypt-{{ version }}.tar.xz
+  url: https://github.com/besser82/libxcrypt/releases/download/v${{ version }}/libxcrypt-${{ version }}.tar.xz
   sha256: e5e1f4caee0a01de2aee26e3138807d6d3ca2b8e67287966d1fefd65e1fd8943
 
 build:
-  number: 1
-  skip: true  # [win]
+  number: 2
+  skip: win
 
 outputs:
-  - name: libxcrypt
-    script: build.sh
+  - package:
+      name: libxcrypt
     build:
-      skip: true  # [win]
-      run_exports:
-        # The ABI is very stable
-        - {{ pin_subpackage('libxcrypt', max_pin=None) }}
-      script_env:
-        - OBSOLETE_API=no
-
+      skip: win
+      script:
+        file: build
+        env:
+          OBSOLETE_API: "no"
     requirements:
       build:
-        - {{ compiler('c') }}
-        - {{ stdlib("c") }}
+        - ${{ stdlib("c") }}
+        - ${{ compiler("c") }}
         - make
         - pkg-config
         # We get perl from yum to avoid creating a dependency cycle
         # - perl
-
-    test:
-      commands:
-        - test -f "${PREFIX}/include/crypt.h"
-        - test -f "${PREFIX}/lib/libcrypt${SHLIB_EXT}"
-        - test -f "${PREFIX}/lib/libcrypt.so.2"  # [not osx]
-        - test -f "${PREFIX}/lib/libcrypt.2.dylib"  # [osx]
-        - test -f "${PREFIX}/lib/pkgconfig/libxcrypt.pc"
-        - test ! -f "${PREFIX}/lib/libcrypt.so.1"
-        - test ! -f "${PREFIX}/lib/libcrypt.1.dylib"
+      run_exports:
+        # The ABI is very stable
+        - ${{ pin_subpackage('libxcrypt', upper_bound=None) }}
+    tests:
+      - package_contents:
+          include: crypt.h
+          lib: crypt
+          files:
+            exists:
+              # pkgconfig metadata
+              - lib/pkgconfig/libxcrypt.pc
+              # correct SOVER
+              - if: linux
+                then: lib/libcrypt.so.2
+                else: lib/libcrypt.2.dylib
+            not_exists:
+              # incorrect SOVER
+              - if: linux
+                then: lib/libcrypt.so.1
+                else: lib/libcrypt.1.dylib
 
   # the difference is OBSOLETE_API
-  - name: libxcrypt1
-    script: build.sh
+  - package:
+      name: libxcrypt1
     build:
-      skip: true  # [not linux]
-      script_env:
-        - OBSOLETE_API=glibc
-
+      skip: not linux
+      script:
+        file: build
+        env:
+          OBSOLETE_API: "glibc"
     requirements:
       build:
-        - {{ compiler('c') }}
+        - ${{ stdlib("c") }}
+        - ${{ compiler("c") }}
         - make
         - pkg-config
         - perl
-
-    test:
-      commands:
-        - test ! -f "${PREFIX}/include/crypt.h"
-        - test ! -f "${PREFIX}/lib/libcrypt${SHLIB_EXT}"
-        - test ! -f "${PREFIX}/lib/pkgconfig/libxcrypt.pc"
-        - test -f "${PREFIX}/lib/libcrypt.so.1"
+    tests:
+      - package_contents:
+          files:
+            exists:
+              - lib/libcrypt.so.1
+            not_exists:
+              # should be in libxcrypt output
+              - include/crypt.h
+              - lib/libcrypt.so
+              - lib/libcrypt.dylib
+              - lib/pkgconfig/libxcrypt.pc
 
 about:
-  home: https://github.com/besser82/libxcrypt
+  homepage: https://github.com/besser82/libxcrypt
+  repository: https://github.com/besser82/libxcrypt
   license: LGPL-2.1-or-later
   license_file:
     - COPYING.LIB
