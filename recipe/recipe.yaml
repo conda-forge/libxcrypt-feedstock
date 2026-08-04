@@ -35,10 +35,16 @@ outputs:
         - ${{ pin_subpackage('libxcrypt', upper_bound=None) }}
     tests:
       - package_contents:
-          include: crypt.h
-          lib: crypt
+          # see below
+          # include: crypt.h
+          # lib: crypt
           files:
             exists:
+              # moved here due to https://github.com/prefix-dev/rattler-build/issues/2722
+              - include/crypt.h
+              - if: linux
+                then: lib/libcrypt.so
+                else: lib/libcrypt.dylib
               # pkgconfig metadata
               - lib/pkgconfig/libxcrypt.pc
               # correct SOVER
